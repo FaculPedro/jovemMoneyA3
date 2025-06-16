@@ -12,7 +12,7 @@ import br.com.unicuritiba.services.CreditCardSimulationService;
 import br.com.unicuritiba.services.UserService;
 
 @RestController
-@RequestMapping("/users/{userId}/credit-card-simulations")
+@RequestMapping("/api/{userId}/credit-card-simulations")
 public class CreditCardSimulationController {
 
     private final CreditCardSimulationService creditCardService;
