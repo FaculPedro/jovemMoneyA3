@@ -1,5 +1,6 @@
 package br.com.unicuritiba.controllers;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.unicuritiba.config.JwtUtil;
 import br.com.unicuritiba.models.User;
 import br.com.unicuritiba.services.UserService;
 
@@ -33,9 +35,13 @@ public class UserController {
 	}
 	
 	@PostMapping("/users")
-	public ResponseEntity<User> saveUser(
-			@RequestBody User user){
-		return ResponseEntity.ok(service.saveUser(user));
+	public ResponseEntity<?> saveUser(@RequestBody User user){
+	    User savedUser = service.saveUser(user);
+	    String token = JwtUtil.generateToken(String.valueOf(savedUser.getId()));
+	    Map<String, Object> response = new HashMap<>();
+	    response.put("user", savedUser);
+	    response.put("token", token);
+	    return ResponseEntity.ok(response);
 	}
 	
 	@DeleteMapping("/users/{id}")
@@ -60,7 +66,11 @@ public class UserController {
 
 	    User user = service.login(cpf, password);
 	    if (user != null) {
-	        return ResponseEntity.ok(user);
+	        String token = JwtUtil.generateToken(String.valueOf(user.getId()));
+	        Map<String, Object> response = new HashMap<>();
+	        response.put("user", user);
+	        response.put("token", token);
+	        return ResponseEntity.ok(response);
 	    } else {
 	        return ResponseEntity.status(401).body("CPF ou senha inválidos");
 	    }

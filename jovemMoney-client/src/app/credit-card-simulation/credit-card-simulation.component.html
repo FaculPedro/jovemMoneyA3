@@ -1,0 +1,79 @@
+<div class="w-full rounded-4xl h-full flex flex-col items-center justify-start gap-8 bg-[#212738] text-[#EDF2EF] p-4 sm:p-8">
+  <h2 class="text-3xl font-bold text-[#57C4E5] mt-4">Simulação de Cartão de Crédito</h2>
+  <button class="bg-[#F97068] cursor-pointer text-[#EDF2EF] px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-[#D1D646] hover:text-[#212738] transition-all duration-200 mb-2" (click)="signals.newSimulationVisible.set(true)">
+    + Nova Dívida
+  </button>
+  @if(signals.loading()) {
+    <div class="w-full h-full flex items-center justify-center">
+      <p-progressSpinner [style]="{ width: '50px', height: '50px', color: '#57C4E5' }" />
+    </div>
+  } @else {
+    <div class="flex flex-row flex-wrap gap-5 justify-center w-full max-w-4xl mb-4 overflow-y-auto" style="max-height: 40vh; min-height: 120px;">
+      @for(simulation of signals.simulations(); track simulation.id) {
+        <app-simulation-card 
+          [simulation]="simulation"
+          [chartData]="getChartData(simulation)"
+          (delete)="deleteSimulation(simulation)" 
+          (details)="openModal(simulation.id)"
+        />
+      }
+    </div>
+  }
+</div>
+
+@if(signals.newSimulationVisible()) {
+<p-dialog [(visible)]="signals.newSimulationVisible" [modal]="true" [style]="{ width: '95vw', maxWidth: '500px', background: '#212738' }">
+  <div class="flex items-center justify-center z-50">
+    <form [formGroup]="formGroup" class="w-full max-w-md rounded-xl shadow-lg p-8 flex flex-col gap-6 items-center bg-[#212738] text-[#EDF2EF]" (ngSubmit)="onSubmitCreditCardSimulation()">
+      <h2 class="text-2xl font-bold text-[#57C4E5] mb-2">Nova Simulação de Cartão de Crédito</h2>
+      @if(signals.loading()) {
+      <div class="w-full h-full flex items-center justify-center">
+        <p-progressSpinner [style]="{ width: '50px', height: '50px', color: '#57C4E5' }" />
+      </div>
+      } @else {
+      <div class="w-full flex flex-col gap-1">
+        <label class="font-semibold" for="initialAmount">Valor da Dívida</label>
+        <input id="initialAmount" type="number"
+          class="border border-[#57C4E5] bg-[#232738] text-[#EDF2EF] rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#D1D646] transition"
+          formControlName="initialAmount" required min="0.01" step="0.01" />
+      </div>
+      <div class="w-full flex flex-col gap-1">
+        <label class="font-semibold " for="interestRate">Juros ao mês (%)</label>
+        <input id="interestRate" type="number"
+          class="border border-[#57C4E5] bg-[#232738] text-[#EDF2EF] rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#D1D646] transition"
+          formControlName="interestRate" required min="0" step="0.01" />
+      </div>
+      <div class="w-full flex flex-col gap-1">
+        <label class="font-semibold " for="paymentType">Tipo de Pagamento</label>
+        <select id="paymentType"
+          class="border border-[#57C4E5] bg-[#232738] text-[#EDF2EF] rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#D1D646] transition"
+          formControlName="paymentType" required>
+          <option class="text-black" value="minimum">Mínimo</option>
+          <option class="text-black" value="partial">Parcial</option>
+          <option class="text-black" value="full">Total</option>
+        </select>
+      </div>
+      <div class="w-full flex flex-col gap-1">
+        <label class="font-semibold " for="months">Meses</label>
+        <input id="months" type="number"
+          class="border border-[#57C4E5] bg-[#232738] text-[#EDF2EF] rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#D1D646] transition"
+          formControlName="months" required min="1" step="1" />
+      </div>
+      <button type="submit"
+        class="bg-[#F97068] text-[#EDF2EF] px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-[#D1D646] hover:text-[#212738] transition-all duration-200 mt-2 w-full">
+        Criar Simulação
+      </button>
+      }
+
+    </form>
+  </div>
+</p-dialog>
+}
+
+@if(signals.detailVisible()) {
+<p-dialog [(visible)]="signals.detailVisible" [draggable]="false" [style]="{ width: '95vw', maxWidth: '700px', background: '#212738' }">
+  <div class="flex items-center justify-center">
+    <p-chart type="line" [data]="getModalData()" class="w-full" />
+  </div>
+</p-dialog>
+}
