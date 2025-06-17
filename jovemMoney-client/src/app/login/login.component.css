@@ -1,0 +1,57 @@
+/*
+  Fixes for login page and button alignment issues.
+  - Make login/register page use a dark background and text for consistency.
+  - Fix button pointer/click area issues by ensuring no overlapping or misaligned elements.
+  - Ensure all buttons have correct box-sizing and pointer-events.
+*/
+
+:host, body, html {
+  background: #18181b !important;
+  color: #f3f4f6 !important;
+}
+
+/* Override login/register container to use dark style */
+.bg-white\/90, .bg-white\/80 {
+  background: #23232a !important;
+  color: #f3f4f6 !important;
+}
+
+.text-gray-800, .text-gray-700, .text-gray-500 {
+  color: #f3f4f6 !important;
+}
+
+input, select, textarea {
+  background: #18181b !important;
+  color: #f3f4f6 !important;
+  border-color: #374151 !important;
+}
+
+/* Button fixes: ensure pointer-events and box-sizing */
+button, .cursor-pointer {
+  pointer-events: auto !important;
+  box-sizing: border-box !important;
+}
+
+button, .rounded-lg, .rounded-xl {
+  position: relative;
+  z-index: 1;
+}
+
+/* Fix for button hover/click area offset */
+button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Remove any accidental margin/padding on form buttons */
+form button[type="submit"] {
+  margin: 0 !important;
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
+}
+
+/* Fix anchor color for dark mode */
+a {
+  color: #60a5fa !important;
+}

@@ -1,0 +1,21 @@
+@import "tailwindcss";
+@import "primeicons/primeicons.css";
+
+/* Minimal base styles only. All other styling must use Tailwind classes in templates */
+body, html {
+  min-height: 100vh;
+}
+
+/* Optional: 3rd party component fixes (PrimeNG, etc.) can stay if absolutely required, but do not override Tailwind utilities */
+
+/* Remove all custom overrides for backgrounds, buttons, inputs, cards, dialogs, flex, max-w, etc */
+
+/* Optional: Keep dark scrollbar for better UX, but this is not required by Tailwind */
+::-webkit-scrollbar {
+  background: #23232a;
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: #4b5563;
+  border-radius: 4px;
+}
